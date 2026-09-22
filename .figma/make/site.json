@@ -1,0 +1,10 @@
+{
+  "description": "Engage users with an interactive motion site that features a unique button that magnetically attracts surrounding elements, enhancing user experience.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

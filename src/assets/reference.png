@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atabo Philip Isaac — Full Stack Developer & IT Infrastructure Specialist</title>
+<meta name="description" content="Portfolio of Atabo Philip Isaac, Full Stack Developer and IT Support & Infrastructure Specialist based in Abuja, Nigeria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0F1720;
+    --panel: #16212B;
+    --panel-2: #1C2A36;
+    --border: #263442;
+    --text: #E7EDF2;
+    --text-muted: #8FA1AE;
+    --text-faint: #5C6F7C;
+    --signal: #3FB8A6;
+    --signal-dim: #2C8478;
+    --amber: #E2A33D;
+    --font-display: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ink: #F3F5F7;
+      --panel: #FFFFFF;
+      --panel-2: #ECEFF2;
+      --border: #D8DEE3;
+      --text: #131C24;
+      --text-muted: #4C5C68;
+      --text-faint: #7C8B96;
+      --signal: #1E8F7D;
+      --signal-dim: #16695C;
+      --amber: #B87A1A;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ink: #0F1720; --panel: #16212B; --panel-2: #1C2A36; --border: #263442;
+    --text: #E7EDF2; --text-muted: #8FA1AE; --text-faint: #5C6F7C;
+    --signal: #3FB8A6; --signal-dim: #2C8478; --amber: #E2A33D;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--text);
+    font-family: var(--font-display);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; }
+
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* subtle background grid, thematic to infrastructure/network */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.18;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  header.top {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: color-mix(in srgb, var(--ink) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  .brand {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .brand span { color: var(--signal); }
+  nav.top-links { display: flex; gap: 28px; }
+  nav.top-links a {
+    font-size: 14px;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: color .15s ease;
+  }
+  nav.top-links a:hover { color: var(--text); }
+  .menu-toggle { display: none; }
+
+  /* HERO */
+  .hero {
+    padding: 88px 0 72px;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .eyebrow-line {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--signal);
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow-line::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 25%, transparent);
+  }
+  h1.name {
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    line-height: 1.05;
+    margin: 0 0 14px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .role {
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    color: var(--text-muted);
+    margin: 0 0 22px;
+    font-weight: 500;
+  }
+  .tagline {
+    max-width: 46ch;
+    font-size: 1.05rem;
+    color: var(--text);
+    margin: 0 0 34px;
+  }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 22px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn-primary { background: var(--signal); color: #08211D; }
+  .btn-primary:hover { background: var(--signal-dim); }
+  .btn-ghost { border-color: var(--border); color: var(--text); background: transparent; }
+  .btn-ghost:hover { border-color: var(--text-faint); }
+  .btn:active { transform: translateY(1px); }
+
+  /* status panel */
+  .status-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .status-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .status-dot { color: var(--signal); }
+  .status-body { padding: 18px 16px; }
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 13.5px;
+  }
+  .status-row:last-child { border-bottom: none; }
+  .status-key { color: var(--text-muted); }
+  .status-val { font-family: var(--font-mono); font-size: 13px; text-align: right; color: var(--text); }
+  .status-val.on { color: var(--signal); }
+
+  section { padding: 76px 0; border-top: 1px solid var(--border); }
+  .section-head { margin-bottom: 40px; max-width: 60ch; }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    margin: 0 0 10px;
+  }
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+  .section-sub { color: var(--text-muted); font-size: 1rem; margin: 0; }
+
+  /* about */
+  .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: start; }
+  .about-body p { font-size: 1.02rem; color: var(--text); max-width: 62ch; }
+  .about-body p + p { margin-top: 16px; }
+  .stat-stack { display: grid; gap: 14px; }
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px;
+  }
+  .stat-num { font-family: var(--font-mono); font-size: 1.7rem; color: var(--signal); font-weight: 600; }
+  .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+  /* skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .skill-col { background: var(--panel); padding: 24px 22px; }
+  .skill-col h3 {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--signal);
+    margin: 0 0 16px;
+    font-weight: 500;
+    text-transform: lowercase;
+  }
+  .skill-col ul { list-style: none; margin: 0; padding: 0; }
+  .skill-col li {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14.5px;
+    color: var(--text);
+  }
+  .skill-col li:last-child { border-bottom: none; }
+
+  /* projects */
+  .project-list { display: grid; gap: 18px; }
+  .project-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 26px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: start;
+  }
+  .project-title { font-size: 1.15rem; font-weight: 700; margin: 0 0 6px; }
+  .project-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    margin: 0 0 14px;
+  }
+  .project-desc { color: var(--text-muted); font-size: 14.5px; max-width: 58ch; }
+  .project-desc ul { margin: 8px 0 0; padding-left: 18px; }
+  .project-desc li { margin-bottom: 4px; }
+  .project-link {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--signal);
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid var(--signal-dim);
+    padding: 8px 14px;
+    border-radius: 4px;
+    align-self: start;
+    transition: background .15s ease;
+  }
+  .project-link:hover { background: color-mix(in srgb, var(--signal) 12%, transparent); }
+
+  /* certifications */
+  .cert-list { display: grid; gap: 0; border-top: 1px solid var(--border); }
+  .cert-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cert-name { font-size: 15px; }
+  .cert-status {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+  .cert-status.done { color: var(--signal); }
+  .cert-status.progress { color: var(--amber); }
+
+  /* contact */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .contact-links { display: grid; gap: 4px; align-content: start; }
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    font-size: 15px;
+  }
+  .contact-link:hover .contact-link-val { color: var(--signal); }
+  .contact-link-key { color: var(--text-muted); font-family: var(--font-mono); font-size: 13px; }
+  .contact-link-val { transition: color .15s ease; }
+
+  form.contact-form { display: grid; gap: 14px; }
+  .field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .field input, .field textarea {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 11px 13px;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 14.5px;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--signal); }
+  .field textarea { resize: vertical; min-height: 100px; }
+  .form-note { font-size: 12.5px; color: var(--text-faint); margin-top: -4px; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0 calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+  .footer-row a { color: var(--text-faint); text-decoration: none; }
+  .footer-row a:hover { color: var(--text-muted); }
+
+  @media (max-width: 860px) {
+    nav.top-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .project-card { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    section { padding: 56px 0; }
+    .hero { padding: 56px 0 48px; }
+    .wrap { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="topbar">
+    <a class="brand" href="#top">atabo<span>.</span>philip</a>
+    <nav class="top-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <section class="hero" style="border-top:none; padding-top: 72px;">
+      <div>
+        <p class="eyebrow-line">Available for new roles</p>
+        <h1 class="name">Atabo Philip Isaac</h1>
+        <p class="role">Full Stack Developer&nbsp;&nbsp;|&nbsp;&nbsp;IT Support &amp; Infrastructure Specialist</p>
+        <p class="tagline">Building reliable web applications and keeping systems running — from code to infrastructure.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#contact">Get in touch</a>
+          <a class="btn btn-ghost" href="mailto:philipdeveloper96@gmail.com">philipdeveloper96@gmail.com</a>
+        </div>
+      </div>
+      <div class="status-panel">
+        <div class="status-head">
+          <span>profile_status.log</span>
+          <span class="status-dot">●&nbsp;live</span>
+        </div>
+        <div class="status-body">
+          <div class="status-row"><span class="status-key">Experience</span><span class="status-val">6+ yrs combined</span></div>
+          <div class="status-row"><span class="status-key">Core stack</span><span class="status-val">React · Node · Express</span></div>
+          <div class="status-row"><span class="status-key">CMS</span><span class="status-val">WordPress</span></div>
+          <div class="status-row"><span class="status-key">Infra</span><span class="status-val">Linux · DNS · Hosting</span></div>
+          <div class="status-row"><span class="status-key">Location</span><span class="status-val">Abuja, Nigeria (Remote-ready)</span></div>
+          <div class="status-row"><span class="status-key">Status</span><span class="status-val on">open to work</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-head">
+        <p class="section-num">01 — About</p>
+        <h2>Two sides of the same discipline</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-body">
+          <p>I've spent over six years split between building web applications and keeping the infrastructure underneath them running — a combination that's less common than it sounds, and more useful than it looks on paper.</p>
+          <p>Day to day, I develop with React, Node.js, Express, and RESTful APIs, work across MongoDB and MySQL, and build and maintain WordPress sites end-to-end — domains, hosting, DNS, and the maintenance that keeps a site fast and online. That's paired with a solid background in Linux, networking, and cloud infrastructure through AWS and Docker.</p>
+          <p>The result: I don't just ship code and hand it off. I understand what happens to it once it's live — and I'm usually the one who gets the call when something breaks.</p>
+        </div>
+        <div class="stat-stack">
+          <div class="stat-card">
+            <div class="stat-num">6+</div>
+            <div class="stat-label">Years across dev, IT ops & infrastructure</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">250+</div>
+            <div class="stat-label">Users supported across 6 branches, daily</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Web platforms designed, built & shipped</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="section-head">
+        <p class="section-num">02 — Skills</p>
+        <h2>What I work with</h2>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-col">
+          <h3>frontend</h3>
+          <ul>
+            <li>JavaScript</li>
+            <li>React</li>
+            <li>HTML5</li>
+            <li>CSS3</li>
+            <li>Responsive design</li>
+          </ul>
+        </div>
+        <div class="skill-col">
+          <h3>backend &amp; devops</h3>
+          <ul>
+            <li>Node.js &amp; Express.js</li>
+            <li>REST APIs</li>
+            <li>Docker</li>
+            <li>GitHub Actions</li>
+            <li>AWS (basic) &amp; Linux</li>
+          </ul>
+        </div>
+        <div class="skill-col">
+          <h3>it &amp; infrastructure</h3>
+          <ul>
+            <li>WordPress development</li>
+            <li>DNS, domain &amp; hosting mgmt</li>
+            <li>cPanel &amp; GoDaddy</li>
+            <li>Networking &amp; troubleshooting</li>
+            <li>ServiceNow / incident mgmt</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-head">
+        <p class="section-num">03 — Projects</p>
+        <h2>Recent work</h2>
+        <p class="section-sub">A mix of client-style builds and my own personal platform, kept live and maintained.</p>
+      </div>
+      <div class="project-list">
+        <div class="project-card">
+          <div>
+            <h3 class="project-title">FixWithPhil</h3>
+            <p class="project-meta">Personal platform — IT support &amp; web services · hosting/DNS self-managed</p>
+            <div class="project-desc">Personal technology services site covering IT support, web development, and hosting/DNS management. Originally on a custom domain; currently deployed on Firebase Hosting while the domain is renewed.</div>
+          </div>
+          <a class="project-link" href="https://fixwithphil-dev.web.app/" target="_blank" rel="noopener">View live ↗</a>
+        </div>
+        <div class="project-card">
+          <div>
+            <h3 class="project-title">Consultation Booking Website</h3>
+            <p class="project-meta">Full stack build · responsive · contact form</p>
+            <div class="project-desc">A responsive consultation booking site with an integrated enquiry form, built and optimized for mobile users end to end.</div>
+          </div>
+        </div>
+        <div class="project-card">
+          <div>
+            <h3 class="project-title">Real Estate Listing Platform</h3>
+            <p class="project-meta">Web development · search &amp; filtering</p>
+            <div class="project-desc">A property listing platform with search and filtering, focused on a fast, usable browsing experience across devices.</div>
+          </div>
+        </div>
+        <div class="project-card">
+          <div>
+            <h3 class="project-title">Operations Portal — Duty Desk, Gatehouse &amp; Maintenance</h3>
+            <p class="project-meta">Multi-department platform · access-controlled logins · built for live operations</p>
+            <div class="project-desc">A unified operations system built for a multi-branch residence, covering three departments under one portal:
+              <ul>
+                <li><strong>Duty Desk</strong> — checklists, complaints, maintenance requests, and duty logs</li>
+                <li><strong>Gatehouse Security</strong> — incident logging, access control, patrols, and alerts</li>
+                <li><strong>Maintenance Desk</strong> — a shared ticket queue synced with Duty Desk</li>
+              </ul>
+              Each department signs in separately with its own username and usercode.
+            </div>
+          </div>
+          <a class="project-link" href="https://duty-desk-gatehouse-9d2v.vercel.app/" target="_blank" rel="noopener">View live ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="certifications">
+      <div class="section-head">
+        <p class="section-num">04 — Certifications</p>
+        <h2>Training &amp; credentials</h2>
+      </div>
+      <div class="cert-list">
+        <div class="cert-row">
+          <span class="cert-name">WordPress &amp; SEO Masterclass with Generative AI</span>
+          <span class="cert-status done">completed</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-name">Google IT Support Professional Certificate</span>
+          <span class="cert-status progress">in progress</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-name">Google Technical Support Fundamentals</span>
+          <span class="cert-status done">completed</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-name">Introduction to Linux — Linux Foundation</span>
+          <span class="cert-status done">completed</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="section-head">
+        <p class="section-num">05 — Contact</p>
+        <h2>Let's talk</h2>
+        <p class="section-sub">Open to remote roles in web development and IT infrastructure. Fastest way to reach me is email.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-links">
+          <a class="contact-link" href="mailto:philipdeveloper96@gmail.com">
+            <span class="contact-link-key">email</span>
+            <span class="contact-link-val">philipdeveloper96@gmail.com</span>
+          </a>
+          <a class="contact-link" href="tel:+2349026800344">
+            <span class="contact-link-key">phone</span>
+            <span class="contact-link-val">+234 902 680 0344</span>
+          </a>
+          <a class="contact-link" href="https://linkedin.com/in/philip-atabo-3a279828a" target="_blank" rel="noopener">
+            <span class="contact-link-key">linkedin</span>
+            <span class="contact-link-val">philip-atabo</span>
+          </a>
+          <a class="contact-link" href="https://github.com/Philipdev-techy" target="_blank" rel="noopener">
+            <span class="contact-link-key">github</span>
+            <span class="contact-link-val">Philipdev-techy</span>
+          </a>
+        </div>
+        <form class="contact-form" onsubmit="event.preventDefault(); window.location.href='mailto:philipdeveloper96@gmail.com?subject=' + encodeURIComponent('Portfolio enquiry from ' + (document.getElementById('cf-name').value || 'website visitor')) + '&body=' + encodeURIComponent(document.getElementById('cf-message').value + '\n\nFrom: ' + document.getElementById('cf-name').value + ' (' + document.getElementById('cf-email').value + ')');">
+          <div class="field">
+            <label for="cf-name">Name</label>
+            <input id="cf-name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="cf-email">Email</label>
+            <input id="cf-email" type="email" required>
+          </div>
+          <div class="field">
+            <label for="cf-message">Message</label>
+            <textarea id="cf-message" required></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit" style="justify-self:start;">Send message</button>
+          <p class="form-note">Opens your email app with this message pre-filled — nothing is stored or sent from this page.</p>
+        </form>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>© 2026 Atabo Philip Isaac</span>
+    <a href="mailto:philipdeveloper96@gmail.com">philipdeveloper96@gmail.com</a>
+  </div>
+</footer>
+
+</body>
+</html>
