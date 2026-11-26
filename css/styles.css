@@ -1,0 +1,1007 @@
+/* Atabo Philip Isaac — portfolio styles.
+   Plain CSS, no framework or build step. Organised in cascade layers so the
+   order of precedence is explicit: reset < base < layout < components < motion. */
+
+@layer reset, base, layout, components, motion;
+
+/* ─── Design tokens ─────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #080808;
+  --bg-raised: #0c0c0c;
+  --bg-strip: #0a0a0a;
+  --bg-input: #0f0f0f;
+  --line: #1a1a1a;
+  --line-soft: #161616;
+  --line-input: #1e1e1e;
+  --hairline: #151515;
+
+  /* Text (greys chosen to keep at least 4.5:1 contrast on --bg) */
+  --text: #f0f0f0;
+  --text-2: #b8b8b8;
+  --text-3: #959595;
+  --text-4: #7d7d7d;
+
+  /* Accents */
+  --lime: #c8f135;
+  --lime-hover: #d4f94a;
+  --cyan: #7df9ff;
+  --pink: #ff6fd8;
+  --teal: #3fb8a6;
+  --amber: #e2a33d;
+  --error: #ff7a7a;
+  --accent: var(--lime);
+
+  /* Type */
+  --font-display: "Outfit", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  /* Spacing and shape */
+  --content: 68.75rem;                         /* 1100px */
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --section-space: clamp(4rem, 9vw, 7.5rem);
+  --radius: 2px;
+  --header-height: 4rem;
+}
+
+/* Accent colour per element, set in the HTML with data-accent. */
+[data-accent="lime"] { --accent: var(--lime); }
+[data-accent="cyan"] { --accent: var(--cyan); }
+[data-accent="pink"] { --accent: var(--pink); }
+[data-accent="amber"] { --accent: var(--amber); }
+
+/* ─── Reset ─────────────────────────────────────────────────────── */
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body,
+  h1, h2, h3,
+  p, ul, ol, dl, dd,
+  address {
+    margin: 0;
+  }
+
+  /* Lists with a class are styled lists: no bullets or indent (the markup still says "list"). */
+  :where(ul, ol)[class] {
+    list-style: none;
+    padding: 0;
+  }
+
+  img,
+  svg {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  input,
+  button,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+/* ─── Base ──────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    background: var(--bg);
+    scroll-behavior: smooth;
+    scroll-padding-block-start: var(--header-height);
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+  }
+
+  body {
+    min-block-size: 100svh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3 {
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--lime);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--lime);
+    color: var(--bg);
+  }
+
+  .accent {
+    color: var(--lime);
+  }
+
+  /* Hidden on screen, still read by screen readers. */
+  .sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .skip-link {
+    position: fixed;
+    inset-block-start: 0.75rem;
+    inset-inline-start: 0.75rem;
+    z-index: 200;
+    padding: 0.625rem 1rem;
+    background: var(--lime);
+    color: var(--bg);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius);
+    translate: 0 -200%;
+    transition: translate 0.2s;
+
+    &:focus-visible {
+      translate: 0 0;
+    }
+  }
+}
+
+/* ─── Layout ────────────────────────────────────────────────────── */
+@layer layout {
+  .section {
+    inline-size: min(100% - 2 * var(--gutter), var(--content));
+    margin-inline: auto;
+    padding-block: 0 var(--section-space);
+  }
+
+  /* The first section after the marquee gets space above it too. */
+  .marquee + .section {
+    padding-block-start: var(--section-space);
+  }
+
+  /* Two columns when there's room, one on narrow screens: no media query needed. */
+  .split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: clamp(2rem, 7vw, 5rem);
+    align-items: start;
+  }
+}
+
+/* ─── Components ────────────────────────────────────────────────── */
+@layer components {
+  /* Header and navigation */
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    border-block-end: 1px solid transparent;
+    transition: background-color 0.3s, border-color 0.3s;
+
+    &[data-scrolled] {
+      background: rgb(8 8 8 / 0.92);
+      backdrop-filter: blur(12px);
+      border-color: var(--line);
+    }
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1rem 2.5rem;
+  }
+
+  .brand {
+    flex-shrink: 0;
+    color: var(--lime);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .brand--large {
+    font-size: 1.125rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+
+    & a {
+      color: var(--text-3);
+      font-size: 0.8125rem;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--text);
+      }
+    }
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--teal);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    inline-size: 6px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 8px var(--teal);
+  }
+
+  @media (width <= 760px) {
+    .site-nav {
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+    }
+
+    .brand {
+      font-size: 0.875rem;
+    }
+
+    /* On phones the links scroll sideways instead of wrapping. */
+    .nav-links {
+      flex: 1 1 auto;
+      min-inline-size: 0;
+      gap: 0.875rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      mask-image: linear-gradient(to right, transparent, #000 0.75rem, #000 calc(100% - 0.75rem), transparent);
+      padding-inline: 0.75rem;
+
+      /* Sit at the right when they fit, and still scroll from the start when they don't. */
+      & li:first-child {
+        margin-inline-start: auto;
+      }
+
+      & a {
+        display: block;
+        padding-block: 0.25rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    .status {
+      display: none;
+    }
+  }
+
+  /* Hero */
+  .hero {
+    --orbit-scale: 1;
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    min-block-size: 100vh;
+    min-block-size: 100svh;
+    padding: calc(var(--header-height) + 2rem) var(--gutter) 6rem;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, #0c1800 0%, var(--bg) 70%);
+    text-align: center;
+
+    /* Faint grid */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgb(200 241 53 / 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(200 241 53 / 0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* Scan line */
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-start: 0;
+      block-size: 1px;
+      background: linear-gradient(90deg, transparent, rgb(200 241 53 / 0.12), transparent);
+      animation: scan 9s linear infinite;
+      pointer-events: none;
+    }
+  }
+
+  .eyebrow {
+    margin-block-end: 1.75rem;
+    color: var(--lime);
+    font-family: var(--font-mono);
+    font-size: clamp(0.5625rem, 0.5rem + 0.3vw, 0.6875rem);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .hero-title {
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 12vw, 7.5rem);
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+
+    & span {
+      display: block;
+    }
+
+    & .accent {
+      text-shadow: 0 0 60px rgb(200 241 53 / 0.35);
+    }
+  }
+
+  .hero-lead {
+    max-inline-size: 26.25rem;
+    margin: 1.75rem auto 0;
+    color: var(--text-3);
+    font-size: 0.9375rem;
+    line-height: 1.75;
+  }
+
+  .hero-cta {
+    position: relative;
+    z-index: 2;
+    /* Room below for the tags orbiting the button. */
+    margin-block: clamp(3.5rem, 8vw, 5rem) calc(var(--orbit-scale) * 8rem);
+  }
+
+  /* Decorative tags floating around the button; js/main.js pulls them towards the pointer. */
+  .orbit {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .orbit-tag {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    translate:
+      calc(-50% + var(--x) * var(--orbit-scale) * 1px)
+      calc(-50% + var(--y) * var(--orbit-scale) * 1px);
+    padding: 0.3125rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 27%, transparent);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .hero-stats {
+    position: absolute;
+    inset-block-end: 2.5rem;
+    inset-inline-start: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: start;
+
+    /* The number shows above its label, while dt still comes first in the markup. */
+    & div {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    & dd {
+      color: var(--lime);
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    & dt {
+      color: var(--text-4);
+      font-family: var(--font-mono);
+      font-size: 0.5625rem;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  .hero-email {
+    position: absolute;
+    inset-block-end: 1.5rem;
+    inset-inline-end: 2rem;
+    color: #3a3a3a;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+  }
+
+  @media (width <= 760px) {
+    .hero {
+      --orbit-scale: 0.42;
+
+      min-block-size: 53.75rem;
+      padding-block-end: 3rem;
+    }
+
+    .orbit-tag {
+      padding: 0.1875rem 0.5rem;
+      font-size: 0.5rem;
+    }
+
+    .hero-stats {
+      position: static;
+      flex-direction: row;
+      justify-content: space-between;
+      inline-size: min(100%, 21.25rem);
+      margin-block-start: 4rem;
+      text-align: center;
+    }
+
+    .hero-email {
+      display: none;
+    }
+  }
+
+  /* Buttons */
+  .button {
+    display: inline-block;
+    padding: 1.25rem 3rem;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--lime);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background: var(--lime-hover);
+    }
+
+    &:focus-visible {
+      outline-color: var(--text);
+      outline-offset: 4px;
+    }
+  }
+
+  .button--glow {
+    box-shadow: 0 0 40px rgb(200 241 53 / 0.35), 0 0 80px rgb(200 241 53 / 0.12);
+  }
+
+  .button--block {
+    inline-size: 100%;
+    padding: 1rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.12em;
+  }
+
+  @media (width <= 760px) {
+    .button--glow {
+      padding: 1rem 2rem;
+      font-size: 0.8125rem;
+    }
+  }
+
+  /* Marquee */
+  .marquee {
+    overflow: hidden;
+    padding-block: 0.8125rem;
+    border-block: 1px solid var(--line-soft);
+    background: var(--bg-strip);
+  }
+
+  .marquee-track {
+    display: flex;
+    inline-size: max-content;
+    animation: marquee 22s linear infinite;
+
+    & span {
+      padding-inline: 2rem;
+      color: #222;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      white-space: nowrap;
+
+      &:nth-child(4n + 1) {
+        color: var(--lime);
+      }
+    }
+  }
+
+  /* Section headings: "01 ——————— ABOUT" */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-block-end: clamp(2.5rem, 6vw, 3.5rem);
+    color: var(--text-4);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+
+    /* The rule between the number and the name. */
+    &::before {
+      content: "";
+      flex: 1;
+      order: 1;
+      block-size: 1px;
+      background: var(--line-input);
+    }
+  }
+
+  .section-index {
+    color: var(--lime);
+  }
+
+  .section-name {
+    order: 2;
+  }
+
+  /* Large statement text */
+  .statement {
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.03em;
+
+    & .line {
+      display: block;
+    }
+  }
+
+  .statement--small {
+    margin-block-end: 1.25rem;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+  }
+
+  .prose p {
+    color: var(--text-3);
+    font-size: 0.9375rem;
+    line-height: 1.85;
+
+    & + p {
+      margin-block-start: 1.25rem;
+    }
+  }
+
+  /* Chips and badges share one look, tinted by --accent. */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 2rem;
+  }
+
+  .chip,
+  .badge {
+    padding: 0.375rem 0.875rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+  }
+
+  .chips--small {
+    gap: 0.5rem;
+    margin-block: 0 1rem;
+
+    & .chip {
+      padding: 0.1875rem 0.625rem;
+      font-size: 0.5625rem;
+    }
+  }
+
+  /* Skills */
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16.25rem), 1fr));
+    gap: 1px;
+    background: var(--hairline);
+  }
+
+  .skill-card {
+    padding: 2.5rem 2rem;
+    border-block-end: 2px solid color-mix(in srgb, var(--accent) 10%, transparent);
+    background: var(--bg);
+
+    & h3 {
+      margin-block-end: 1.75rem;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+  }
+
+  .dot-list {
+    display: grid;
+    gap: 0.875rem;
+
+    & li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-2);
+      font-size: 0.875rem;
+
+      &::before {
+        content: "";
+        flex-shrink: 0;
+        inline-size: 4px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+    }
+  }
+
+  /* Projects: each card lays itself out by its own width (container query). */
+  .project-list {
+    display: grid;
+    gap: 1px;
+    background: var(--hairline);
+
+    & > li {
+      container-type: inline-size;
+      background: var(--bg);
+    }
+  }
+
+  .project {
+    display: grid;
+    grid-template-columns: 1.75rem 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding: 1.75rem 1.25rem;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: var(--bg-raised);
+    }
+
+    & h3 {
+      margin-block-end: 0.75rem;
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: clamp(1.1875rem, 1rem + 1vw, 1.5rem);
+      font-weight: 700;
+    }
+
+    & p {
+      max-inline-size: 35rem;
+      color: var(--text-3);
+      font-size: 0.875rem;
+      line-height: 1.8;
+    }
+  }
+
+  .project-index {
+    padding-block-start: 0.25rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.15em;
+  }
+
+  .project-link {
+    grid-column: 2;
+    justify-self: start;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+
+  @container (width > 40rem) {
+    .project {
+      grid-template-columns: 4rem 1fr auto;
+      gap: 2rem;
+      padding: 2.5rem;
+    }
+
+    .project-link {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+
+  /* Certifications: the numbers come from a CSS counter. */
+  .cert-list {
+    border: 1px solid var(--line);
+    counter-reset: cert;
+  }
+
+  .cert {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.625rem 1.5rem;
+    padding: clamp(1.125rem, 2.5vw, 1.75rem) clamp(1.125rem, 3vw, 2.25rem);
+    counter-increment: cert;
+
+    & + & {
+      border-block-start: 1px solid var(--line-soft);
+    }
+  }
+
+  .cert-name {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    color: #cccccc;
+    font-size: 0.9375rem;
+
+    &::before {
+      content: counter(cert, decimal-leading-zero);
+      flex-shrink: 0;
+      inline-size: 1.5rem;
+      color: #555555;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  .badge {
+    flex-shrink: 0;
+    padding: 0.25rem 0.75rem;
+    border-color: color-mix(in srgb, var(--accent) 27%, transparent);
+    font-size: 0.5625rem;
+    letter-spacing: 0.12em;
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+
+  /* Contact */
+  .contact-intro {
+    margin-block-end: 2.5rem;
+    color: var(--text-3);
+    font-size: 0.875rem;
+    line-height: 1.8;
+  }
+
+  .contact-list {
+    font-style: normal;
+
+    & dl {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    & dt {
+      margin-block-end: 0.25rem;
+      color: var(--text-4);
+      font-family: var(--font-mono);
+      font-size: 0.5625rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    & a {
+      color: var(--lime);
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--lime-hover);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+    }
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 0.875rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.375rem;
+
+    & label {
+      color: var(--text-4);
+      font-family: var(--font-mono);
+      font-size: 0.5625rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    & :is(input, textarea) {
+      inline-size: 100%;
+      padding: 0.875rem 1rem;
+      border: 1px solid var(--line-input);
+      border-radius: var(--radius);
+      background: var(--bg-input);
+      color: var(--text);
+      font-size: 0.875rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+
+      &:focus-visible {
+        outline: none;
+        border-color: color-mix(in srgb, var(--lime) 60%, transparent);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--lime) 15%, transparent);
+      }
+
+      /* Only after the person has interacted with the field. */
+      &:user-invalid {
+        border-color: var(--error);
+      }
+    }
+
+    & textarea {
+      min-block-size: 9rem;
+      resize: vertical;
+    }
+  }
+
+  .form-note {
+    color: var(--text-4);
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 2rem 2.5rem;
+    border-block-start: 1px solid #141414;
+
+    & p {
+      color: var(--text-4);
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+  }
+
+  @media (width <= 760px) {
+    .site-footer {
+      padding-inline: 1.25rem;
+    }
+  }
+
+  /* Custom cursor, added by js/main.js only for a mouse and when motion is welcome. */
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: 9999;
+    border-radius: 50%;
+    pointer-events: none;
+    translate: -100px -100px; /* off screen until the mouse first moves */
+    will-change: translate;
+  }
+
+  .cursor-dot {
+    inline-size: 8px;
+    aspect-ratio: 1;
+    background: var(--lime);
+  }
+
+  .cursor-ring {
+    inline-size: 40px;
+    aspect-ratio: 1;
+    border: 1px solid rgb(200 241 53 / 0.45);
+  }
+
+  .has-custom-cursor,
+  .has-custom-cursor * {
+    cursor: none;
+  }
+
+  .has-custom-cursor :is(input, textarea) {
+    cursor: text;
+  }
+}
+
+/* ─── Motion ────────────────────────────────────────────────────── */
+@layer motion {
+  @keyframes scan {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(100vh); }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Respect the visitor's "reduce motion" setting. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .hero::after {
+      display: none;
+    }
+  }
+}
